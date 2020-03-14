@@ -140,16 +140,17 @@ class Window(pyglet.window.Window):
     lock = False
     mouse_lock = property(lambda self:self.lock, setLock)
 
-    def __init__(self, path, cube, *args, **kwargs):
+    def __init__(self, stop, path, cube, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.set_minimum_size(300,200)
         self.keys = key.KeyStateHandler()
         self.push_handlers(self.keys)
         self.path = path 
+        self.stop = stop
         pyglet.clock.schedule(self.update)
 
         self.model = Model(cube)
-        self.player = Player((4.5,4.5,4.5),(-45,45))
+        self.player = Player((4.5,4.5,4.5),(math.degrees(-math.asin(1/math.sqrt(3))),45))
 
     def on_mouse_motion(self,x,y,dx,dy):
         if self.mouse_lock: self.player.mouse_motion(dx,dy)
@@ -169,12 +170,22 @@ class Window(pyglet.window.Window):
         self.push(self.player.pos,self.player.rot)
         self.model.draw()
         glPopMatrix()
-        pyglet.image.get_buffer_manager().get_color_buffer().save(self.path)
-        self.close()
+        if self.stop:
+            pyglet.image.get_buffer_manager().get_color_buffer().save(self.path)
+            self.close()
 
 
 def createImage(cube, path):
-    window = Window(cube=cube,path=path,width=600, height=600, caption='Cube',resizable=True)
+    window = Window(stop=True, cube=cube, path=path, width=600, height=600, caption='Cube',resizable=True)
+    glClearColor(0.5,0.5,0.5,1)
+    glEnable(GL_DEPTH_TEST)
+    try:
+        pyglet.app.run()
+    except AttributeError:
+        pass
+
+def showImage(cube):
+    window = Window(stop=False, cube=cube, path="hmm", width=600, height=600, caption='Cube',resizable=True)
     glClearColor(0.5,0.5,0.5,1)
     glEnable(GL_DEPTH_TEST)
     try:
