@@ -2,26 +2,36 @@ import numpy as np
 import draw
 import moves
 from completeCube import complete, completeHash
+from itertools import combinations_with_replacement
+
+possibleMoves = "rRlLuUdDfFbB"
 
 def hashCube(cube):
-    hashString = ""
-    for i in range(3):
-        for j in range(3):
-            for k in range(3):
-                for l in range(6):
-                    hashString += cube[i][j][k][l]
+    hashString = [x for x in np.nditer(cube)]
     return hashString
 
-if __name__ == "__main__":
+def calcCycleNumFromString(moveString):
+    count = 0
     cube = complete
     currHash = ""
-    cnt = 0
     while currHash != completeHash:
-        draw.createImage(cube, f"output/{cnt:03}.png")
-        cube = moves.upForward(cube)
-        cnt+=1
-        draw.createImage(cube, f"output/{cnt:03}.png")
-        cube = moves.rightForward(cube)
-        cnt+=1
+        count+=1
+        for move in moveString:
+            cube = moves.moves[move](cube)
         currHash = hashCube(cube)
-    draw.createImage(cube, f"output/{cnt:03}.png")
+    return count
+
+def makeInstructions(start=1):
+    while True:
+        for x in combinations_with_replacement(possibleMoves,start):
+            yield ''.join(x)
+        start+=1
+
+
+if __name__ == "__main__":
+    with open("output.log",'w') as f:
+        for count, x in enumerate(makeInstructions()):
+            if count % 100 == 0:
+                f.flush()
+                print(x)
+            f.write(f"{x}\t{calcCycleNumFromString(x)}\n")

@@ -99,3 +99,18 @@ def yAxis(source, down, reverse):
                     target[k][Side][j][i] = source[2-j][Side][k][yAxisFaceTranslation[i]]
             
     return target
+
+moves = {
+    'r': rightForward,
+    'R': rightReverse,
+    'l': leftForward,
+    'L': leftReverse,
+    'u': upForward,
+    'U': upReverse,
+    'd': downForward,
+    'D': downReverse,
+    'b': backForward,
+    'B': backReverse,
+    'f': frontForward,
+    'F': frontReverse
+}
