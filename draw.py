@@ -3,7 +3,6 @@ from pyglet.gl import *
 from pyglet.window import key
 import math
 import numpy as np
-import random
 
 class Model:
 
@@ -141,64 +140,16 @@ class Window(pyglet.window.Window):
     lock = False
     mouse_lock = property(lambda self:self.lock, setLock)
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, path, cube, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.set_minimum_size(300,200)
         self.keys = key.KeyStateHandler()
         self.push_handlers(self.keys)
+        self.path = path 
         pyglet.clock.schedule(self.update)
 
-        choices = "RGBYOWX"
-        testCube = np.array([
-            [
-                #Left Slice
-                [
-                    #Bottom Side
-                    ["O","X","B","X","W","X"],["X","X","B","X","W","X"],["X","R","B","X","W","X"]
-                ],
-                [
-                    #Middle Side
-                    ["O","X","B","X","X","X"],["X","X","B","X","X","X"],["X","R","B","X","X","X"]
-                ],
-                [
-                    #Top Side
-                    ["O","X","B","X","W","Y"],["X","X","B","X","X","Y"],["X","R","B","X","X","Y"]
-                ]
-            ],
-            [
-                #Middle Slice
-                [
-                    #Bottom Side
-                    ["O","X","X","X","W","X"],["X","X","X","X","W","X"],["X","R","X","X","W","X"]
-                ],
-                [
-                    #Middle Side
-                    ["O","X","X","X","X","X"],["X","X","X","X","X","X"],["X","R","X","X","X","X"]
-                ],
-                [
-                    #Top Side
-                    ["O","X","X","X","X","Y"],["X","X","X","X","X","Y"],["X","R","X","X","X","Y"]
-                ]
-            ],
-            [
-                #Right Slice
-                [
-                    #Bottom Side
-                    ["O","X","X","G","W","X"],["X","X","X","G","W","X"],["X","R","X","G","W","X"]
-                ],
-                [
-                    #Middle Side
-                    ["O","X","X","G","X","X"],["X","X","X","G","X","X"],["X","R","X","G","X","X"]
-                ],
-                [
-                    #Top Side
-                    ["O","X","X","G","X","Y"],["X","X","X","G","X","Y"],["X","R","X","G","X","Y"]
-                ]
-            ]
-        ])
-
-        self.model = Model(testCube)
-        self.player = Player((0.5,1.5,1.5),(-30,0))
+        self.model = Model(cube)
+        self.player = Player((4.5,4.5,4.5),(-45,45))
 
     def on_mouse_motion(self,x,y,dx,dy):
         if self.mouse_lock: self.player.mouse_motion(dx,dy)
@@ -218,10 +169,15 @@ class Window(pyglet.window.Window):
         self.push(self.player.pos,self.player.rot)
         self.model.draw()
         glPopMatrix()
+        pyglet.image.get_buffer_manager().get_color_buffer().save(self.path)
+        self.close()
 
-if __name__ == '__main__':
-    window = Window(width=400, height=300, caption='Cube',resizable=True)
+
+def createImage(cube, path):
+    window = Window(cube=cube,path=path,width=600, height=600, caption='Cube',resizable=True)
     glClearColor(0.5,0.5,0.5,1)
     glEnable(GL_DEPTH_TEST)
-    #glEnable(GL_CULL_FACE)
-    pyglet.app.run()
+    try:
+        pyglet.app.run()
+    except AttributeError:
+        pass
