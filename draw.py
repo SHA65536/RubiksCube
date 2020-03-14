@@ -149,47 +149,53 @@ class Window(pyglet.window.Window):
         pyglet.clock.schedule(self.update)
 
         choices = "RGBYOWX"
-        testCube = np.empty([3,3,3,6],dtype='U')
-        for i in range(3):
-            for j in range(3):
-                for k in range(3):
-                    for l in range(6):
-                        testCube[i][j][k][l] = random.choice(choices)
-        #testCube = np.array([
-        #    [
-        #        [
-        #            ["R","R","R","R","R","R"],["B","B","B","B","B","B"],["G","G","G","G","G","G"]
-        #        ],
-        #        [
-        #            ["R","R","R","R","R","R"],["B","B","B","B","B","B"],["G","G","G","G","G","G"]
-        #        ],
-        #        [
-        #            ["R","R","R","R","R","R"],["B","B","B","B","B","B"],["G","G","G","G","G","G"]
-        #        ]
-        #    ],
-        #    [
-        #        [
-        #            ["R","R","R","R","R","R"],["B","B","B","B","B","B"],["G","G","G","G","G","G"]
-        #        ],
-        #        [
-        #            ["R","R","R","R","R","R"],["B","B","B","B","B","B"],["G","G","G","G","G","G"]
-        #        ],
-        #        [
-        #            ["R","R","R","R","R","R"],["B","B","B","B","B","B"],["G","G","G","G","G","G"]
-        #        ]
-        #    ],
-        #    [
-        #        [
-        #            ["R","R","R","R","R","R"],["B","B","B","B","B","B"],["G","G","G","G","G","G"]
-        #        ],
-        #        [
-        #            ["R","R","R","R","R","R"],["B","B","B","B","B","B"],["G","G","G","G","G","G"]
-        #        ],
-        #        [
-        #            ["R","R","R","R","R","R"],["B","B","B","B","B","B"],["G","G","G","G","G","G"]
-        #        ]
-        #    ]
-        #])
+        testCube = np.array([
+            [
+                #Left Slice
+                [
+                    #Bottom Side
+                    ["O","X","B","X","W","X"],["X","X","B","X","W","X"],["X","R","B","X","W","X"]
+                ],
+                [
+                    #Middle Side
+                    ["O","X","B","X","X","X"],["X","X","B","X","X","X"],["X","R","B","X","X","X"]
+                ],
+                [
+                    #Top Side
+                    ["O","X","B","X","W","Y"],["X","X","B","X","X","Y"],["X","R","B","X","X","Y"]
+                ]
+            ],
+            [
+                #Middle Slice
+                [
+                    #Bottom Side
+                    ["O","X","X","X","W","X"],["X","X","X","X","W","X"],["X","R","X","X","W","X"]
+                ],
+                [
+                    #Middle Side
+                    ["O","X","X","X","X","X"],["X","X","X","X","X","X"],["X","R","X","X","X","X"]
+                ],
+                [
+                    #Top Side
+                    ["O","X","X","X","X","Y"],["X","X","X","X","X","Y"],["X","R","X","X","X","Y"]
+                ]
+            ],
+            [
+                #Right Slice
+                [
+                    #Bottom Side
+                    ["O","X","X","G","W","X"],["X","X","X","G","W","X"],["X","R","X","G","W","X"]
+                ],
+                [
+                    #Middle Side
+                    ["O","X","X","G","X","X"],["X","X","X","G","X","X"],["X","R","X","G","X","X"]
+                ],
+                [
+                    #Top Side
+                    ["O","X","X","G","X","Y"],["X","X","X","G","X","Y"],["X","R","X","G","X","Y"]
+                ]
+            ]
+        ])
 
         self.model = Model(testCube)
         self.player = Player((0.5,1.5,1.5),(-30,0))
@@ -215,7 +221,7 @@ class Window(pyglet.window.Window):
 
 if __name__ == '__main__':
     window = Window(width=400, height=300, caption='Cube',resizable=True)
-    glClearColor(0,0,0,1)
+    glClearColor(0.5,0.5,0.5,1)
     glEnable(GL_DEPTH_TEST)
     #glEnable(GL_CULL_FACE)
     pyglet.app.run()
