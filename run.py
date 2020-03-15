@@ -38,6 +38,9 @@ def makeImagesFromString(moveString):
     currHash = ""
     draw.createImage(cube,f"output/{moveString}_{moveCount:06}.png")
     filenames.append(f"output/{moveString}_{moveCount:06}.png")
+    moveCount+=1
+    draw.createImage(cube,f"output/{moveString}_{moveCount:06}.png")
+    filenames.append(f"output/{moveString}_{moveCount:06}.png")
     while currHash != completeHash:
         cycleCount+=1
         for move in moveString:
@@ -48,12 +51,12 @@ def makeImagesFromString(moveString):
         currHash = hashCube(cube)
     return filenames
     
-def makeMoviesFromString(moveString):
+def makeGifFromString(moveString):
     filenames = makeImagesFromString(moveString)
-    with imageio.get_writer(f'output/{moveString}.gif', mode='I') as writer:
+    with imageio.get_writer(f'output/{moveString}.gif', mode='I', fps=1) as writer:
         for filename in filenames:
             image = imageio.imread(filename)
-            writer.append_data(image)
+            writer.append_data(image,)
     optimize(f'output/{moveString}.gif')
     for filename in filenames:
         remove(filename)
@@ -72,9 +75,10 @@ def highestCycleNumber():
     return highest, count
 
 if __name__ == "__main__":
-    with open("output.log",'w') as f:
-        for count, x in enumerate(makeInstructions()):
-            if count % 100 == 0:
-                f.flush()
-                print(x)
-            f.write(f"{x}\t{calcCycleNumFromString(x)}\n")
+    #with open("output.log",'w') as f:
+    #    for count, x in enumerate(makeInstructions()):
+    #        if count % 100 == 0:
+    #            f.flush()
+    #            print(x)
+    #        f.write(f"{x}\t{calcCycleNumFromString(x)}\n")
+    makeGifFromString("rlRLudUDfbFB")
