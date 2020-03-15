@@ -103,14 +103,14 @@ def yAxis(source, down, reverse):
 moves = {
     'r': rightForward,
     'R': rightReverse,
-    'l': leftForward,
-    'L': leftReverse,
-    'u': upForward,
-    'U': upReverse,
+    'l': leftReverse,
+    'L': leftForward,
+    'u': upReverse,
+    'U': upForward,
     'd': downForward,
     'D': downReverse,
-    'b': backForward,
-    'B': backReverse,
+    'b': backReverse,
+    'B': backForward,
     'f': frontForward,
     'F': frontReverse
 }
