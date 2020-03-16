@@ -3,7 +3,7 @@ import draw
 import moves
 from os import remove
 from completeCube import complete, completeHash
-from itertools import combinations_with_replacement
+from itertools import product
 import imageio
 from pygifsicle import optimize
 
@@ -24,11 +24,11 @@ def calcCycleNumFromString(moveString):
         currHash = hashCube(cube)
     return count
 
-def makeInstructions(start=1):
-    while True:
-        for x in combinations_with_replacement(possibleMoves,start):
+def makeInstructions(startLen=1, maxLen=0):
+    while startLen != maxLen:
+        for x in product(possibleMoves, repeat=startLen):
             yield ''.join(x)
-        start+=1
+        startLen+=1
 
 def makeImagesFromString(moveString):
     cycleCount = 0
@@ -53,7 +53,7 @@ def makeImagesFromString(moveString):
     
 def makeGifFromString(moveString):
     filenames = makeImagesFromString(moveString)
-    with imageio.get_writer(f'output/{moveString}.gif', mode='I', fps=1) as writer:
+    with imageio.get_writer(f'output/{moveString}.gif', mode='I', fps=3) as writer:
         for filename in filenames:
             image = imageio.imread(filename)
             writer.append_data(image,)
@@ -61,6 +61,26 @@ def makeGifFromString(moveString):
     for filename in filenames:
         remove(filename)
     return f'output/{moveString}.gif'
+
+def numberCrunch():
+    pass
+
+def minimizeInstruction(moveString):
+    while True:
+        cube = complete
+        hashTable = [(completeHash)]
+        for moveIndex, move in enumerate(moveString):
+            cube = moves.moves[move](cube)
+            currHash = hashCube(cube)
+            try:
+                key = hashTable.index((currHash))
+                moveString = moveString[:key] + moveString[moveIndex+1:]
+                break
+            except ValueError:
+                hashTable.append((currHash))
+        else:
+            break
+    return moveString
 
 def highestCycleNumber():
     highest = ("",0)
@@ -72,13 +92,16 @@ def highestCycleNumber():
             cycles = int(cycles)
             if cycles > highest[1]:
                 highest = (instruct, cycles)
-    return highest, count
+    return (highest[0], highest[1], count)
 
 if __name__ == "__main__":
+    minimizeInstruction("rrrllrrll")
     #with open("output.log",'w') as f:
-    #    for count, x in enumerate(makeInstructions()):
+    #    for count, x in enumerate(makeInstructions(maxLen=5)):
+    #        res = calcCycleNumFromString(x)
     #        if count % 100 == 0:
     #            f.flush()
-    #            print(x)
-    #        f.write(f"{x}\t{calcCycleNumFromString(x)}\n")
-    makeGifFromString("rlRLudUDfbFB")
+    #            print(f"{x}\t{count}\t{res}")
+    #        f.write(f"{x}\t{res}\n")
+    #res, _, _ = highestCycleNumber()
+    #makeGifFromString(res)
