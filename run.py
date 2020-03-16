@@ -24,10 +24,14 @@ def calcCycleNumFromString(moveString):
         currHash = hashCube(cube)
     return count
 
-def makeInstructions(startLen=1, maxLen=0):
+def makeInstructions(startInst=None, startLen=1, maxLen=0):
     while startLen != maxLen:
         for x in product(possibleMoves, repeat=startLen):
-            yield ''.join(x)
+            if startInst:
+                if ''.join(x) == startInst:
+                    startInst = None
+            else:
+                yield ''.join(x)
         startLen+=1
 
 def makeImagesFromString(moveString):
@@ -62,8 +66,27 @@ def makeGifFromString(moveString):
         remove(filename)
     return f'output/{moveString}.gif'
 
-def numberCrunch():
-    pass
+def numberCrunch(cont=True):
+    count=0
+    instruct = ""
+
+    if(cont):
+        try:
+            with open("output.log",'r') as f:
+                for line in f:
+                    instruct, _ = line.split("\t")
+                    count+=1
+        except FileNotFoundError:
+            pass
+    else:
+        remove("output.log")
+    with open("output.log",'a') as f:
+        for count, x in enumerate(makeInstructions(instruct),start=count):
+            res = calcCycleNumFromString(x)
+            if count % 100 == 0:
+                f.flush()
+                print(f"{x}\t{count}\t{res}")
+            f.write(f"{x}\t{res}\n")
 
 def minimizeInstruction(moveString):
     while True:
@@ -95,13 +118,4 @@ def highestCycleNumber():
     return (highest[0], highest[1], count)
 
 if __name__ == "__main__":
-    minimizeInstruction("rrrllrrll")
-    #with open("output.log",'w') as f:
-    #    for count, x in enumerate(makeInstructions(maxLen=5)):
-    #        res = calcCycleNumFromString(x)
-    #        if count % 100 == 0:
-    #            f.flush()
-    #            print(f"{x}\t{count}\t{res}")
-    #        f.write(f"{x}\t{res}\n")
-    #res, _, _ = highestCycleNumber()
-    #makeGifFromString(res)
+    numberCrunch()
