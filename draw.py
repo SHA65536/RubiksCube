@@ -176,7 +176,7 @@ class Window(pyglet.window.Window):
 
 
 def createImage(cube, path):
-    window = Window(stop=True, cube=cube, path=path, width=600, height=600, caption='Cube',resizable=True)
+    window = Window(stop=True, cube=cube, path=path, width=600, height=600, caption='Cube',resizable=True, visible=False)
     glClearColor(0.5,0.5,0.5,1)
     glEnable(GL_DEPTH_TEST)
     try:
