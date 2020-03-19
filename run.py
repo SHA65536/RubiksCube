@@ -6,6 +6,7 @@ from completeCube import complete, completeHash
 from itertools import product
 import imageio
 from pygifsicle import optimize
+from time import clock
 
 possibleMoves = "rRlLuUdDfFbB"
 
@@ -66,23 +67,25 @@ def makeGifFromString(moveString):
         remove(filename)
     return f'output/{moveString}.gif'
 
-def numberCrunch(cont=True):
+def numberCrunch(cont=True, maxLen=0):
     count=0
     instruct = ""
-
-    if(cont):
-        try:
+    try:
+        if(cont):
             with open("output.log",'r') as f:
                 for line in f:
                     instruct, _ = line.split("\t")
                     count+=1
-        except FileNotFoundError:
-            pass
-    else:
-        remove("output.log")
+        else:
+            remove("output.log")
+    except FileNotFoundError:
+        pass
     with open("output.log",'a') as f:
-        for count, x in enumerate(makeInstructions(instruct),start=count):
-            res = calcCycleNumFromString(x)
+        for count, x in enumerate(makeInstructions(instruct,maxLen=maxLen),start=count):
+            if checkInstruction(x):
+                res = calcCycleNumFromString(x)
+            else:
+                res = "Redundant"
             if count % 100 == 0:
                 f.flush()
                 print(f"{x}\t{count}\t{res}")
@@ -105,6 +108,18 @@ def minimizeInstruction(moveString):
             break
     return moveString
 
+def checkInstruction(moveString):
+    cube = complete
+    hashTable = [(completeHash)]
+    for moveIndex, move in enumerate(moveString):
+        cube = moves.moves[move](cube)
+        currHash = hashCube(cube)
+        if currHash in hashTable:
+            return False
+        else:
+            hashTable.append((currHash))
+    return True
+
 def highestCycleNumber():
     highest = ("",0)
     count = 0
@@ -112,6 +127,8 @@ def highestCycleNumber():
         for line in f:
             instruct, cycles = line.split("\t")
             count += 1
+            if cycles == "Redundant":
+                continue
             cycles = int(cycles)
             if cycles > highest[1]:
                 highest = (instruct, cycles)
