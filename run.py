@@ -127,7 +127,7 @@ def highestCycleNumber():
         for line in f:
             instruct, cycles = line.split("\t")
             count += 1
-            if cycles == "Redundant":
+            if cycles == "Redundant\n":
                 continue
             cycles = int(cycles)
             if cycles > highest[1]:
