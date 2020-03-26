@@ -67,7 +67,7 @@ def makeGifFromString(moveString):
         remove(filename)
     return f'output/{moveString}.gif'
 
-def numberCrunch(cont=True, maxLen=0):
+def numberCrunch(cont=True, maxLen=0, redundancy=False):
     count=0
     instruct = ""
     try:
@@ -82,7 +82,7 @@ def numberCrunch(cont=True, maxLen=0):
         pass
     with open("output.log",'a') as f:
         for count, x in enumerate(makeInstructions(instruct,maxLen=maxLen),start=count):
-            if checkInstruction(x):
+            if redundancy or checkInstruction(x):
                 res = calcCycleNumFromString(x)
             else:
                 res = "Redundant"
@@ -135,4 +135,7 @@ def highestCycleNumber():
     return (highest[0], highest[1], count)
 
 if __name__ == "__main__":
-    numberCrunch()
+    try:
+        numberCrunch()
+    except KeyboardInterrupt:
+        print(highestCycleNumber())
