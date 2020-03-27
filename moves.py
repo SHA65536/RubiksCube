@@ -36,7 +36,7 @@ def leftReverse(source):
 
 def xAxis(source, right, reverse):
     Side = RightSlice if right else LeftSlice
-    target = np.empty_like(source)
+    target = np.copy(source)
 
     for k in range(3):
         for j in range(3):
@@ -62,7 +62,7 @@ def frontReverse(source):
 
 def zAxis(source, back, reverse):
     Side = BackSlice if back else FrontSlice
-    target = np.empty_like(source)
+    target = np.copy(source)
 
     for k in range(3):
         for j in range(3):
@@ -88,7 +88,7 @@ def upReverse(source):
 
 def yAxis(source, down, reverse):
     Side = BottomSlice if down else TopSlice
-    target = np.empty_like(source)
+    target = np.copy(source)
 
     for k in range(3):
         for j in range(3):
