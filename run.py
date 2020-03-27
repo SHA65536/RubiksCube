@@ -27,9 +27,12 @@ def calcCycleNumFromString(moveString):
 
 def makeInstructions(startInst=None, startLen=1, maxLen=0):
     while startLen != maxLen:
-        for x in product(possibleMoves, repeat=startLen):
+        for count, x in enumerate(product(possibleMoves, repeat=startLen)):
             if startInst:
+                if count % 10000 == 0:
+                    print(f"Getting Ready For New Instructions {count}", end='\r')
                 if ''.join(x) == startInst:
+                    print("\nMaking New Instructions")
                     startInst = None
             else:
                 yield ''.join(x)
@@ -74,15 +77,18 @@ def numberCrunch(cont=True, maxLen=0, redundancy=False):
         if(cont):
             with open("output.log",'r') as f:
                 for line in f:
+                    if count % 10000 == 0:
+                        print(f"Reading Past Instructions From Log {count}", end='\r')
                     instruct, _ = line.split("\t")
                     count+=1
+                print("\nDone Reading.")
         else:
             remove("output.log")
     except FileNotFoundError:
         pass
     with open("output.log",'a') as f:
         for count, x in enumerate(makeInstructions(instruct,maxLen=maxLen),start=count):
-            if redundancy or checkInstruction(x):
+            if redundancy or checkInstructionRedundancy(x):
                 res = calcCycleNumFromString(x)
             else:
                 res = "Redundant"
@@ -108,7 +114,7 @@ def minimizeInstruction(moveString):
             break
     return moveString
 
-def checkInstruction(moveString):
+def checkInstructionRedundancy(moveString):
     cube = complete
     hashTable = [(completeHash)]
     for moveIndex, move in enumerate(moveString):
@@ -120,7 +126,7 @@ def checkInstruction(moveString):
             hashTable.append((currHash))
     return True
 
-def highestCycleNumber():
+def getHighestCycleNumberFromLog():
     highest = ("",0)
     count = 0
     with open("output.log",'r') as f:
@@ -138,4 +144,4 @@ if __name__ == "__main__":
     try:
         numberCrunch()
     except KeyboardInterrupt:
-        print(highestCycleNumber())
+        print(getHighestCycleNumberFromLog())
