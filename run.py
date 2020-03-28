@@ -142,6 +142,6 @@ def getHighestCycleNumberFromLog():
 
 if __name__ == "__main__":
     try:
-        numberCrunch()
+        numberCrunch(redundancy=True)
     except KeyboardInterrupt:
         print(getHighestCycleNumberFromLog())
