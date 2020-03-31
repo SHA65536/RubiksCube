@@ -73,6 +73,7 @@ def makeGifFromString(moveString):
 def numberCrunch(cont=True, maxLen=0, redundancy=False):
     count=0
     instruct = ""
+    print("Script started! Press ctrl+c to stop!")
     try:
         if(cont):
             with open("output.log",'r') as f:
