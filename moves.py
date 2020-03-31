@@ -1,116 +1,116 @@
 import numpy as np
 import draw
 
-LeftSlice = 0
-MiddleSlice = 1
-RightSlice = 2
+LEFT_SLICE = 0
+MIDDLE_SLICE = 1
+RIGHT_SLICE = 2
 
-BottomSlice = 0
-TopSlice = 2
+BOTTOM_SLICE = 0
+TOP_SLICE = 2
 
-BackSlice = 0
-FrontSlice = 2
+BACK_SLICE = 0
+FRONT_SLICE = 2
 
-BackFace = 0
-FrontFace = 1
-LeftFace = 2
-RightFace = 3
-BottomFace = 4
-TopFace = 5
+BACK_FACE = 0
+FRONT_FACE = 1
+LEFT_FACE = 2
+RIGHT_FACE = 3
+BOTTOM_FACE = 4
+TOP_FACE = 5
 
-xAxisFaceTranslation = [5,4,2,3,0,1]
-zAxisFaceTranslation = [0,1,4,5,3,2]
-yAxisFaceTranslation = [3,2,0,1,4,5]
+X_AXIS_FACE_TRANSLATION = [5,4,2,3,0,1]
+Z_AXIS_FACE_TRANSLATION = [0,1,4,5,3,2]
+Y_AXIS_FACE_TRANSLATION = [3,2,0,1,4,5]
 
-def rightForward(source):
-    return xAxis(source, True, False)
+def right_forward(source):
+    return x_axis(source, True, False)
 
-def rightReverse(source):
-    return xAxis(source, True, True)
+def right_reverse(source):
+    return x_axis(source, True, True)
 
-def leftForward(source):
-    return xAxis(source, False, False)
+def left_forward(source):
+    return x_axis(source, False, False)
     
-def leftReverse(source):
-    return xAxis(source, False, True)
+def left_reverse(source):
+    return x_axis(source, False, True)
 
-def xAxis(source, right, reverse):
-    Side = RightSlice if right else LeftSlice
+def x_axis(source, right, reverse):
+    side = RIGHT_SLICE if right else LEFT_SLICE
     target = np.copy(source)
 
     for k in range(3):
         for j in range(3):
             for i in range(6):
                 if reverse:
-                    target[Side][2-j][k][xAxisFaceTranslation[i]] = source[Side][k][j][i]
+                    target[side][2-j][k][X_AXIS_FACE_TRANSLATION[i]] = source[side][k][j][i]
                 else:
-                    target[Side][k][j][i] = source[Side][2-j][k][xAxisFaceTranslation[i]]
+                    target[side][k][j][i] = source[side][2-j][k][X_AXIS_FACE_TRANSLATION[i]]
             
     return target
 
-def backForward(source):
-    return zAxis(source, True, False)
+def back_forward(source):
+    return z_axis(source, True, False)
 
-def backReverse(source):
-    return zAxis(source, True, True)
+def back_reverse(source):
+    return z_axis(source, True, True)
 
-def frontForward(source):
-    return zAxis(source, False, False)
+def front_forward(source):
+    return z_axis(source, False, False)
     
-def frontReverse(source):
-    return zAxis(source, False, True)
+def front_reverse(source):
+    return z_axis(source, False, True)
 
-def zAxis(source, back, reverse):
-    Side = BackSlice if back else FrontSlice
+def z_axis(source, back, reverse):
+    side = BACK_SLICE if back else FRONT_SLICE
     target = np.copy(source)
 
     for k in range(3):
         for j in range(3):
             for i in range(6):
                 if reverse:
-                    target[2-j][k][Side][zAxisFaceTranslation[i]] = source[k][j][Side][i]
+                    target[2-j][k][side][Z_AXIS_FACE_TRANSLATION[i]] = source[k][j][side][i]
                 else:
-                    target[k][j][Side][i] = source[2-j][k][Side][zAxisFaceTranslation[i]]
+                    target[k][j][side][i] = source[2-j][k][side][Z_AXIS_FACE_TRANSLATION[i]]
             
     return target
 
-def downForward(source):
-    return yAxis(source, True, False)
+def down_forward(source):
+    return y_axis(source, True, False)
 
-def downReverse(source):
-    return yAxis(source, True, True)
+def down_reverse(source):
+    return y_axis(source, True, True)
 
-def upForward(source):
-    return yAxis(source, False, False)
+def up_forward(source):
+    return y_axis(source, False, False)
     
-def upReverse(source):
-    return yAxis(source, False, True)
+def up_reverse(source):
+    return y_axis(source, False, True)
 
-def yAxis(source, down, reverse):
-    Side = BottomSlice if down else TopSlice
+def y_axis(source, down, reverse):
+    side = BOTTOM_SLICE if down else TOP_SLICE
     target = np.copy(source)
 
     for k in range(3):
         for j in range(3):
             for i in range(6):
                 if reverse:
-                    target[2-j][Side][k][yAxisFaceTranslation[i]] = source[k][Side][j][i]
+                    target[2-j][side][k][Y_AXIS_FACE_TRANSLATION[i]] = source[k][side][j][i]
                 else:
-                    target[k][Side][j][i] = source[2-j][Side][k][yAxisFaceTranslation[i]]
+                    target[k][side][j][i] = source[2-j][side][k][Y_AXIS_FACE_TRANSLATION[i]]
             
     return target
 
 moves = {
-    'r': rightForward,
-    'R': rightReverse,
-    'l': leftReverse,
-    'L': leftForward,
-    'u': upReverse,
-    'U': upForward,
-    'd': downForward,
-    'D': downReverse,
-    'b': backReverse,
-    'B': backForward,
-    'f': frontForward,
-    'F': frontReverse
+    'r': right_forward,
+    'R': right_reverse,
+    'l': left_reverse,
+    'L': left_forward,
+    'u': up_reverse,
+    'U': up_forward,
+    'd': down_forward,
+    'D': down_reverse,
+    'b': back_reverse,
+    'B': back_forward,
+    'f': front_forward,
+    'F': front_reverse
 }
