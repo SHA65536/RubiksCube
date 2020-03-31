@@ -6,10 +6,10 @@ If you repeat the same algorithm enough times on a rubiks cube it will return to
 The number of times you need to repeat the algorithm until the cube returns to it's original position  is dependant on the algorithm, and that is what I want to explore in this project.
 
 ### Installation 
-To install simply clone the repository and run 'pip install -r requirments.txt' To install all the dependencies of the project.
+To install simply clone the repository and run `pip install -r requirments.txt` To install all the dependencies of the project.
 
 ### Running
-To start calculate the number of cycles needed to repeat the position, you should run run.py
+To start calculate the number of cycles needed to repeat the position, you should run `run.py`
 
 ### Visualization
 Inside run.py there are some visualization funtions such as `makeGifFromString` that are used to visualize an algorithm.
