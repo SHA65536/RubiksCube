@@ -44,17 +44,17 @@ def makeImagesFromString(moveString):
     filenames = []
     cube = complete
     currHash = ""
-    draw.createImage(cube,f"output/{moveString}_{moveCount:06}.png")
+    draw.drawRubiks(cube,f"output/{moveString}_{moveCount:06}.png")
     filenames.append(f"output/{moveString}_{moveCount:06}.png")
     moveCount+=1
-    draw.createImage(cube,f"output/{moveString}_{moveCount:06}.png")
+    draw.drawRubiks(cube,f"output/{moveString}_{moveCount:06}.png")
     filenames.append(f"output/{moveString}_{moveCount:06}.png")
     while currHash != completeHash:
         cycleCount+=1
         for move in moveString:
             moveCount+=1
             cube = moves.moves[move](cube)
-            draw.createImage(cube,f"output/{moveString}_{moveCount:06}.png")
+            draw.drawRubiks(cube,f"output/{moveString}_{moveCount:06}.png")
             filenames.append(f"output/{moveString}_{moveCount:06}.png")
         currHash = hashCube(cube)
     return filenames
