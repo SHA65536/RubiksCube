@@ -48,4 +48,4 @@ complete = np.array([
             ]
         ])
 
-completeHash = [x for x in np.nditer(complete)]
+complete_hash = [x for x in np.nditer(complete)]

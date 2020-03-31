@@ -26,7 +26,7 @@ def add_block(x,y,z,colours,batch):
     batch.add(4, GL_QUADS, colours[4], ('v3f', (x, y, z,  X, y, z,  X, y, Z,  x, y, Z)), tex_coords)
     batch.add(4, GL_QUADS, colours[5],    ('v3f', (x, Y, Z,  X, Y, Z,  X, Y, z,  x, Y, z)), tex_coords)
 
-def colourStringToTextureList(colourStr):
+def colour_string_to_texture_list(colourStr):
     colours = []
     for letter in colourStr:
         if letter == "R":
@@ -45,17 +45,17 @@ def colourStringToTextureList(colourStr):
             colours.append(black)
     return colours
 
-def drawRubiks(cube, path):
+def draw_cube(cube, path):
     window = pyglet.window.Window(width=600, height=600, caption='Cube',resizable=True, visible=False)
     glClearColor(0.5,0.5,0.5,1)
     glEnable(GL_DEPTH_TEST)
-    btch = pyglet.graphics.Batch()
+    gl_batch = pyglet.graphics.Batch()
 
     for i in range(3):
         for j in range(3):
             for k in range(3):
-                colours = colourStringToTextureList(cube[i][j][k])
-                add_block(i, j, k, colours, btch)
+                colours = colour_string_to_texture_list(cube[i][j][k])
+                add_block(i, j, k, colours, gl_batch)
 
     @window.event
     def on_draw():
@@ -69,7 +69,7 @@ def drawRubiks(cube, path):
         glRotatef(-45,0,1,0)
         glTranslatef(-4.5, -4.5, -4.5)
 
-        btch.draw()
+        gl_batch.draw()
         glPopMatrix()
         pyglet.image.get_buffer_manager().get_color_buffer().save(path)
         window.close()
@@ -89,4 +89,4 @@ black = get_tex('tex/black.png')
 
 
 if __name__ == '__main__':
-    drawRubiks(complete, "test.png")
+    draw_cube(complete, "test.png")
