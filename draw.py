@@ -46,7 +46,7 @@ def colour_string_to_texture_list(colourStr):
     return colours
 
 def draw_cube(cube, path):
-    window = pyglet.window.Window(width=600, height=600, caption='Cube',resizable=True, visible=False)
+    window = pyglet.window.Window(width=600, height=600, visible=False)
     glClearColor(0.5,0.5,0.5,1)
     glEnable(GL_DEPTH_TEST)
     gl_batch = pyglet.graphics.Batch()
@@ -57,27 +57,20 @@ def draw_cube(cube, path):
                 colours = colour_string_to_texture_list(cube[i][j][k])
                 add_block(i, j, k, colours, gl_batch)
 
-    @window.event
-    def on_draw():
-        window.clear()
-        glMatrixMode(GL_PROJECTION)
-        glLoadIdentity()
-        gluPerspective(70, window.width/window.height, 0.05, 1000)
+    window.clear()
+    glMatrixMode(GL_PROJECTION)
+    glLoadIdentity()
+    gluPerspective(70, window.width/window.height, 0.05, 1000)
 
-        glPushMatrix()
-        glRotatef(-math.degrees(-math.asin(1/math.sqrt(3))),1,0,0)
-        glRotatef(-45,0,1,0)
-        glTranslatef(-4.5, -4.5, -4.5)
+    glPushMatrix()
+    glRotatef(-math.degrees(-math.asin(1/math.sqrt(3))),1,0,0)
+    glRotatef(-45,0,1,0)
+    glTranslatef(-4.5, -4.5, -4.5)
 
-        gl_batch.draw()
-        glPopMatrix()
-        pyglet.image.get_buffer_manager().get_color_buffer().save(path)
-        window.close()
-
-    try:
-        pyglet.app.run()
-    except AttributeError:
-        pass
+    gl_batch.draw()
+    glPopMatrix()
+    pyglet.image.get_buffer_manager().get_color_buffer().save(path)
+    window.close()
 
 red = get_tex('tex/red.png')
 blue = get_tex('tex/blue.png')
