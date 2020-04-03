@@ -1,5 +1,4 @@
 import numpy as np
-import draw
 
 LEFT_SLICE = 0
 MIDDLE_SLICE = 1
