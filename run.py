@@ -5,7 +5,6 @@ from Cube import RubiksCube
 from itertools import product
 import imageio
 from pygifsicle import optimize
-from time import clock
 
 POSSIBLE_MOVES = "rRlLuUdDfFbB"
 
