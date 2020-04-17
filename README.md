@@ -8,6 +8,9 @@ The number of times you need to repeat the algorithm until the cube returns to i
 ### Installation 
 To install simply clone the repository and run `pip install -r requirements.txt` To install all the dependencies of the project.
 
+You will also need pygifsicle for gif optimizations, that can be installed using `apt-get install gifsicle` on linux or from 
+https://eternallybored.org/misc/gifsicle/ for windows.
+
 ### Running
 To start calculate the number of cycles needed to repeat the position, you should run `run.py`
 
