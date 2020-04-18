@@ -1,28 +1,19 @@
 import numpy as np
 import draw
-import moves
 from os import remove
-from completeCube import complete, complete_hash
+from Cube import RubiksCube
 from itertools import product
 import imageio
 from pygifsicle import optimize
-from time import clock
 
 POSSIBLE_MOVES = "rRlLuUdDfFbB"
 
-def hash_cube(cube):
-    hash_string = [x for x in np.nditer(cube)]
-    return hash_string
-
 def calc_cycle_num_from_string(move_string):
     count = 0
-    cube = complete
-    current_hash = ""
-    while current_hash != complete_hash:
+    cube = RubiksCube()
+    while count == 0 or not cube.is_solved():
         count+=1
-        for move in move_string:
-            cube = moves.moves[move](cube)
-        current_hash = hash_cube(cube)
+        cube.apply_algorithm(move_string)
     return count
 
 def make_instructions(starting_instruction=None, start_length=1, max_length=0):
@@ -42,21 +33,19 @@ def make_images_from_string(move_string):
     cycle_count = 0
     move_count = 0
     filenames = []
-    cube = complete
-    current_hash = ""
-    draw.draw_cube(cube,f"output/{move_string}_{move_count:06}.png")
+    cube = RubiksCube()
+    draw.draw_cube(cube.data,f"output/{move_string}_{move_count:06}.png")
     filenames.append(f"output/{move_string}_{move_count:06}.png")
     move_count+=1
-    draw.draw_cube(cube,f"output/{move_string}_{move_count:06}.png")
+    draw.draw_cube(cube.data,f"output/{move_string}_{move_count:06}.png")
     filenames.append(f"output/{move_string}_{move_count:06}.png")
-    while current_hash != complete_hash:
+    while cycle_count == 0 or not cube.is_solved():
         cycle_count+=1
         for move in move_string:
-            move_count+=1
-            cube = moves.moves[move](cube)
-            draw.draw_cube(cube,f"output/{move_string}_{move_count:06}.png")
+            move_count += 1
+            cube.make_move(move)
+            draw.draw_cube(cube.data,f"output/{move_string}_{move_count:06}.png")
             filenames.append(f"output/{move_string}_{move_count:06}.png")
-        current_hash = hash_cube(cube)
     return filenames
     
 def make_gif_from_string(move_string):
@@ -100,11 +89,11 @@ def compute_cycles_sequence(resume_work=True, max_length=0, redundancy=False):
 
 def minimize_instruction_string(move_string):
     while True:
-        cube = complete
-        hash_table = [(complete_hash)]
+        cube = RubiksCube()
+        hash_table = [(cube.complete_hash)]
         for move_index, move in enumerate(move_string):
-            cube = moves.moves[move](cube)
-            current_hash = hash_cube(cube)
+            cube.make_move(move)
+            current_hash = cube.hash
             try:
                 key = hash_table.index((current_hash))
                 move_string = move_string[:key] + move_string[move_index+1:]
@@ -116,11 +105,11 @@ def minimize_instruction_string(move_string):
     return move_string
 
 def is_instruction_redundant(move_string):
-    cube = complete
-    hash_table = [(complete_hash)]
+    cube = RubiksCube()
+    hash_table = [(cube.complete_hash)]
     for move_index, move in enumerate(move_string):
-        cube = moves.moves[move](cube)
-        current_hash = hash_cube(cube)
+        cube.make_move(move)
+        current_hash = cube.hash
         if current_hash in hash_table:
             return True
         else:
@@ -143,6 +132,6 @@ def get_highest_cycle_number_from_log():
 
 if __name__ == "__main__":
     try:
-        compute_cycles_sequence(redundancy=True)
+        compute_cycles_sequence(redundancy=False)
     except KeyboardInterrupt:
         print(get_highest_cycle_number_from_log())

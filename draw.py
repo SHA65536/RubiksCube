@@ -2,7 +2,7 @@ import pyglet
 from pyglet.gl import *
 import math
 import numpy as np
-from completeCube import complete
+from Cube import RubiksCube
 
 def get_tex(file):
     tex = pyglet.image.load(file).get_texture()
@@ -82,4 +82,4 @@ black = get_tex('tex/black.png')
 
 
 if __name__ == '__main__':
-    draw_cube(complete, "test.png")
+    draw_cube(RubiksCube().data, "test.png")
