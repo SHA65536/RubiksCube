@@ -1,6 +1,9 @@
 import numpy as np
 
 class RubiksCube():
+    # RubiksCube class representing a cube.
+
+    # These are constants for array access
     LEFT_SLICE = 0
     MIDDLE_SLICE = 1
     RIGHT_SLICE = 2
@@ -22,10 +25,15 @@ class RubiksCube():
     Z_AXIS = 1
     Y_AXIS = 2
 
+    # These represent the destination of faces after rotation.
     X_AXIS_FACE_TRANSLATION = [5,4,2,3,0,1]
     Z_AXIS_FACE_TRANSLATION = [0,1,4,5,3,2]
     Y_AXIS_FACE_TRANSLATION = [3,2,0,1,4,5]
 
+    # This is a helper for executing algorithms
+
+    # Each move corresponds to the settings that will 
+    # perform that move with the rotate function.
     MOVE_DICT = {
         'r': (X_AXIS,RIGHT_SLICE,False),
         'R': (X_AXIS,RIGHT_SLICE,True),
@@ -42,6 +50,7 @@ class RubiksCube():
     }
 
     def __init__(self):
+        #Initialization makes a solved cube.
         self.data = np.load('BaseCube.npy')
         self.complete_hash = [x for x in np.nditer(self.data)]
 
@@ -63,6 +72,7 @@ class RubiksCube():
         self.rotate(move_settings[0], move_settings[1], move_settings[2],)
 
     def rotate(self, axis, side, reverse):
+        #don't touch and it will work :D
         new = np.copy(self.data)
         if axis == 0:
             for k in range(3):
