@@ -5,6 +5,7 @@ from Cube import RubiksCube
 from itertools import product
 import imageio
 from pygifsicle import optimize
+import argparse
 
 POSSIBLE_MOVES = "rRlLuUdDfFbB"
 
@@ -130,8 +131,38 @@ def get_highest_cycle_number_from_log():
                 highest = (instruct, cycles)
     return (highest[0], highest[1], count)
 
+def is_algorithm_invalid(move_string):
+    for letter in move_string:
+            if letter not in POSSIBLE_MOVES:
+                return f"Letter '{letter}' is not a valid move! valid moves are: '{POSSIBLE_MOVES}'"
+    return False
+
 if __name__ == "__main__":
-    try:
-        compute_cycles_sequence(redundancy=False)
-    except KeyboardInterrupt:
-        print(get_highest_cycle_number_from_log())
+    parser = argparse.ArgumentParser(description="CommandLine tool to simulate a rubiks cube by SHA2048")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('-r', action="store_true", dest="read_from_log", help="Read the highest cycle number from log.")
+    group.add_argument('-g', action="store", dest="make_gif", help="Make a gif from a string of moves.", default=False, metavar="instruction_string")
+    group.add_argument('-c', action="store_true", dest="compute_cycles", help="Start computing of cycles into log.")
+    group.add_argument('-m', action="store", dest="minimize_instruction", help="Minimizes redundancy in instruction.", default=False, metavar="instruction_string")
+    parser.add_argument('-d','--disable', action="store_true", dest="disable_redundancy", help="Disables redundancy optimization")
+    args = parser.parse_args()
+    if args.read_from_log:
+        print("Reading from log!")
+        try:
+            res = get_highest_cycle_number_from_log()
+            print(f"The highest instruction is '{res[0]}' with {res[1]} cycles until epoch at line {res[2]}")
+        except FileNotFoundError:
+            print("No log file found!")
+    elif args.make_gif:
+        if (error := is_algorithm_invalid(args.make_gif)):
+            print(error)
+        else:
+            output = make_gif_from_string(args.make_gif)
+            print(f"Gif created succesfully at: {output}")
+    elif args.compute_cycles:
+        compute_cycles_sequence(redundancy=args.disable_redundancy)
+    elif args.minimize_instruction:
+        if (error := is_algorithm_invalid(args.minimize_instruction)):
+            print(error)
+        else:
+            print(f"'{args.minimize_instruction}' minimizes to '{minimize_instruction_string(args.minimize_instruction)}'")
